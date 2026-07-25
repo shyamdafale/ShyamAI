@@ -3,6 +3,7 @@ https://platform.openai.com/home
 
 
 
+
 Create the API key from here:
 
 
@@ -10,10 +11,12 @@ https://aistudio.google.com/api-keys?_gl=1bak360_gaMTYxMjM0NDQxNi4xNzgzOTQ4NDIz_
 
 
 
+
 Create the API key from here:
 
 
 https://huggingface.co/settings/tokens
+
 
 
 
