@@ -27,6 +27,6 @@ This extension detects explicit or harmful websites and notifies the user. It al
 - For automatic email sending, add a server endpoint and update `background.js` to POST report data.
 
 ## Testing
-- Visit a sample page containing explicit words like `porn`, `adult`, or `xxx`.
+- Visit a sample page containing explicit words like `adult`. 
 - Visit `https://www.instagram.com/` and search for explicit hashtags or text.
 - Check notifications and open the popup to update the report email.

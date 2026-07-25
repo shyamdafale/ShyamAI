@@ -27,7 +27,7 @@ Follow the instructions in `INSTALLATION.md` for your browser.
 
 ## 4. Test page content detection
 
-1. Open a simple test page with explicit text in the body, for example create a local HTML file containing `porn` or `adult`.
+1. Open a simple test page with explicit text in the body, for example create a local HTML file containing `adult`.
 2. Load the page in the browser.
 3. Confirm the extension triggers a notification.
 
