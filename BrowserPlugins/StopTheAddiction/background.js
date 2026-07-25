@@ -76,12 +76,12 @@ chrome.notifications.onButtonClicked.addListener((nid, buttonIndex) => {
   });
 });
 
-function reportSuspiciousTab(tab, reason) {
+function reportSuspiciousTab(tab, reason, explicitWords = []) {
   if (!tab || !tab.url) return;
   createNotification(tab.id, tab.url, reason, `Suspicious content detected: ${reason}`);
   // Offline-only mode: always save report locally (Downloads/server receiver can pick it up).
   try {
-    collectAndSaveReport(tab, reason);
+    collectAndSaveReport(tab, reason, explicitWords);
   } catch (e) {
     console.warn('collectAndSaveReport call failed', e);
   }
@@ -103,36 +103,62 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
+function fetchIpInfo() {
+  return fetch('https://ipwho.is/')
+    .then(async res => {
+      if (!res.ok) {
+        throw new Error(`IP lookup failed: ${res.status}`);
+      }
+      const json = await res.json();
+      if (json.success === false) {
+        throw new Error(json.message || 'IP lookup service returned failure');
+      }
+      return {
+        ip: json.ip,
+        city: json.city,
+        region: json.region,
+        country: json.country,
+        country_code: json.country_code,
+        latitude: json.latitude,
+        longitude: json.longitude,
+        org: json.organization,
+        timezone: json.timezone?.id
+      };
+    })
+    .catch(() => {
+      return fetch('https://api.ipify.org?format=json')
+        .then(async res => {
+          if (!res.ok) {
+            throw new Error(`IP fallback failed: ${res.status}`);
+          }
+          const json = await res.json();
+          return { ip: json.ip };
+        });
+    });
+}
+
 // Collect IP/location from a public API and save a JSON report to Downloads.
-function collectAndSaveReport(tab, reason) {
+function collectAndSaveReport(tab, reason, explicitWords = []) {
   try {
-    fetch('https://ipapi.co/json/')
-      .then(async res => {
-        if (!res.ok) {
-          throw new Error(`IP lookup failed: ${res.status}`);
-        }
-        const text = await res.text();
-        try {
-          return JSON.parse(text);
-        } catch (parseError) {
-          throw new Error('IP lookup returned invalid JSON');
-        }
-      })
+    fetchIpInfo()
       .then(ipData => {
         const payload = {
           pageUrl: tab.url,
           source: reason,
           detectedAt: new Date().toISOString(),
+          explicitWords,
           ipInfo: ipData,
           userAgent: navigator.userAgent
         };
         saveReportJson(tab, payload);
-      }).catch(err => {
+      })
+      .catch(err => {
         console.warn('IP fetch failed:', err);
         const fallbackPayload = {
           pageUrl: tab.url,
           source: reason,
           detectedAt: new Date().toISOString(),
+          explicitWords,
           ipInfo: { error: err.message || 'IP lookup failed' },
           userAgent: navigator.userAgent
         };
@@ -140,6 +166,15 @@ function collectAndSaveReport(tab, reason) {
       });
   } catch (e) {
     console.warn('collectAndSaveReport error', e);
+    const fallbackPayload = {
+      pageUrl: tab.url,
+      source: reason,
+      detectedAt: new Date().toISOString(),
+      explicitWords,
+      ipInfo: { error: e.message || 'IP lookup failed' },
+      userAgent: navigator.userAgent
+    };
+    saveReportJson(tab, fallbackPayload);
   }
 }
 
@@ -178,7 +213,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "EXPLICIT_CONTENT_DETECTED") {
-    reportSuspiciousTab(sender.tab, message.reason || "Explicit page content detected");
+    reportSuspiciousTab(sender.tab, message.reason || "Explicit page content detected", message.explicitWords || []);
     sendResponse({ received: true });
   }
 });
