@@ -2,8 +2,6 @@ Create the API key from here:
 https://platform.openai.com/home
 
 
-sd_sk-proj-9LeeGcm12VH1NFjWS7bQO7_gDDBQRAD_VADMx_q8b-vlmervi_3FVP9POL0q65P7JjaYq4N5jdT3BlbkFJ9ZSzVAyWzQPstj-eYExzKXvwrKmRCPh-PXeYIB03AoYB_8IDiLqtQfP0Yyd-LUc2kv5FzJg8sA
-
 
 Create the API key from here:
 
@@ -11,16 +9,12 @@ Create the API key from here:
 https://aistudio.google.com/api-keys?_gl=1bak360_gaMTYxMjM0NDQxNi4xNzgzOTQ4NDIz_ga_P1DBVKWT6V*czE3ODM5NDg0MjMkbzEkZzEkdDE3ODM5NDg4NjIkajYwJGwwJGgxNzY3MTkxMjI1&project=gen-lang-client-0957723667&projectFilter=gen-lang-client-0332376362
 
 
-sd_AQ.Ab8RN6JCxNA3h3VEjGh6nDICHpqUyG0IhZdyEcXb2h2uf4kprg
-
 
 Create the API key from here:
 
 
 https://huggingface.co/settings/tokens
 
-
-sd_hf_QQQIowPcpGCsrETriRsUtLaKQuaTegquCt
 
 
 Download and install the Ollama from here:
