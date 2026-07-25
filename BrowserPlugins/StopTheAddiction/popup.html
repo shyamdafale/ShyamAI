@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stop The Addiction</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Stop The Addiction</h1>
+    <p>Protect yourself from explicit or harmful sites. This extension notifies when suspicious content is detected.</p>
+    <div class="field">
+      <label for="reportEmail">Report email address</label>
+      <input type="email" id="reportEmail" placeholder="report@example.com" />
+    </div>
+    <div class="field">
+      <label for="reportProvider">Default mail provider</label>
+      <select id="reportProvider">
+        <option value="default">Default mail app</option>
+        <option value="gmail">Gmail (web)</option>
+        <option value="outlook">Outlook (web)</option>
+        <option value="yahoo">Yahoo Mail (web)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="reportEndpoint">Reporting endpoint (optional)</label>
+      <input type="url" id="reportEndpoint" placeholder="https://your-server.example.com/report" />
+      <small>When provided, reports will be POSTed to this endpoint as JSON.</small>
+    </div>
+    <div class="field">
+      <label for="reportAlwaysLocal">Force local save (skip server)</label>
+      <input type="checkbox" id="reportAlwaysLocal" />
+      <small>When checked, reports are saved locally (Downloads or server filepath) instead of being POSTed.</small>
+    </div>
+    <button id="saveButton">Save Email</button>
+    <button id="reportButton">Report current page</button>
+    <div id="status"></div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

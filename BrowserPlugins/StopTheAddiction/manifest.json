@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Stop The Addiction",
+  "description": "Detects explicit or unsafe websites and notifies the user. Provides a reporting option for suspicious content.",
+  "version": "1.0.0",
+  "permissions": ["tabs", "notifications", "storage", "downloads"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "48": "icons/icon48.svg",
+    "128": "icons/icon128.svg"
+  },
+  "action": {
+    "default_icon": {
+      "48": "icons/icon48.svg",
+      "128": "icons/icon128.svg"
+    },
+    "default_popup": "popup.html",
+    "default_title": "Stop The Addiction"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*", "file://*/*"],
+      "js": ["content_script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
