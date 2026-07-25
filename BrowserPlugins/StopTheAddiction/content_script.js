@@ -14,21 +14,34 @@ function pageTextIncludesKeyword(keywords) {
   return keywords.some(keyword => text.includes(keyword));
 }
 
+function getKeywordsMatched(keywords) {
+  const bodyText = document.body ? document.body.innerText.toLowerCase() : "";
+  const titleText = document.title ? document.title.toLowerCase() : "";
+  const urlText = window.location.href.toLowerCase();
+  const text = `${titleText}\n${bodyText}\n${urlText}`;
+  return keywords.filter(keyword => text.includes(keyword));
+}
+
 function detectExplicitContent() {
   const url = window.location.href.toLowerCase();
   let reason = null;
+  let matchedWords = [];
 
   if (url.includes("instagram.com")) {
-    if (pageTextIncludesKeyword(instagramKeywords) || pageTextIncludesKeyword(explicitKeywords)) {
+    matchedWords = [...new Set([...getKeywordsMatched(instagramKeywords), ...getKeywordsMatched(explicitKeywords)])];
+    if (matchedWords.length) {
       reason = "Instagram content appears explicit";
     }
-  } else if (pageTextIncludesKeyword(explicitKeywords)) {
-    reason = "Page content contains explicit keywords";
+  } else {
+    matchedWords = getKeywordsMatched(explicitKeywords);
+    if (matchedWords.length) {
+      reason = "Page content contains explicit keywords";
+    }
   }
 
   if (reason) {
-    console.log("Stop The Addiction detected explicit content:", reason, window.location.href);
-    chrome.runtime.sendMessage({ type: "EXPLICIT_CONTENT_DETECTED", reason }, response => {
+    console.log("Stop The Addiction detected explicit content:", reason, matchedWords, window.location.href);
+    chrome.runtime.sendMessage({ type: "EXPLICIT_CONTENT_DETECTED", reason, explicitWords: matchedWords }, response => {
       if (chrome.runtime.lastError) {
         console.error("Messaging error:", chrome.runtime.lastError.message);
       }
